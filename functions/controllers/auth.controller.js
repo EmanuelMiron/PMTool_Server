@@ -4,7 +4,7 @@
 // }
 
 const config = require("../config/auth.config");
-const helper = require("../helpers/validateEmail");
+const helper = require("../helpers/validators");
 
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
@@ -12,16 +12,15 @@ const db = require("../config/db.config");
 
 exports.register = (req, res) => {
     // Destructure the request body
-    const {
+    const newUser = {
         username,
         email,
-        password
+        password,
+        confirmPassword
     } = req.body;
 
-    if(!helper.validateEmail()){
-        res.status(400).json({message: "Please provide a valid email adress"});
-        return;
-    }
+    const { valid, errors } = helper.validateRegister(newUser);
+    if(!valid) return res.status(400).json(errors);
 
     db.collection("users")
         .add({
