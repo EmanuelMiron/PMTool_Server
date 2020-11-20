@@ -7,4 +7,9 @@ module.exports = app => {
         middleware.verifyRegister,
         controller.register
     )
+
+    app.post(
+        "/auth/login",
+        controller.login
+    )
 }
