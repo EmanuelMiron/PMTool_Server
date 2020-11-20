@@ -44,10 +44,16 @@ exports.register = (req, res) => {
 
 exports.login = (req, res) => {
     // Destructure request body
-    const {
+    const user = {
         username,
         password
     } = req.body;
+
+    const {
+        valid,
+        errors
+    } = validateLoginData(user);
+    if (!valid) return res.status(400).json(errors);
 
     // Check if the User exists
     db.collection("users")
