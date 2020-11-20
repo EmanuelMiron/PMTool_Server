@@ -19,8 +19,11 @@ exports.register = (req, res) => {
         confirmPassword
     } = req.body;
 
-    const { valid, errors } = helper.validateRegister(newUser);
-    if(!valid) return res.status(400).json(errors);
+    const {
+        valid,
+        errors
+    } = helper.validateRegister(newUser);
+    if (!valid) return res.status(400).json(errors);
 
     db.collection("users")
         .add({
@@ -45,22 +48,23 @@ exports.register = (req, res) => {
 exports.login = (req, res) => {
     // Destructure request body
     const user = {
-        username,
+        email,
         password
     } = req.body;
 
     const {
         valid,
         errors
-    } = validateLoginData(user);
+    } = helper.validateLogin(user);
     if (!valid) return res.status(400).json(errors);
 
     // Check if the User exists
     db.collection("users")
-        .doc(username)
+        .where("email", "==", email)
         .get()
-        .then(doc => {
-            if (!doc.exists) {
+        .then(data => {
+            const doc = data.docs[0];
+            if (doc === undefined) {
                 res.status(404).json({
                     message: "User not found!"
                 })
@@ -78,13 +82,13 @@ exports.login = (req, res) => {
             }
 
             var token = jwt.sign({
-                id: username
+                id: doc.id
             }, config.secret, {
                 expiresIn: 86400 // 24 hours
             })
 
             res.status(200).send({
-                username,
+                email,
                 accessToken: token
             })
         })
