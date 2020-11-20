@@ -4,6 +4,7 @@
 // }
 
 const config = require("../config/auth.config");
+const helper = require("../helpers/validateEmail");
 
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
@@ -16,6 +17,11 @@ exports.register = (req, res) => {
         email,
         password
     } = req.body;
+
+    if(!helper.validateEmail()){
+        res.status(400).json({message: "Please provide a valid email adress"});
+        return;
+    }
 
     db.collection("users")
         .doc(username)
