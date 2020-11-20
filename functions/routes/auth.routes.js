@@ -1,6 +1,8 @@
+const middleware = require("../middlewares/verifyRegister");
+
 module.exports = app => {
-    app.get("/register", (req, res) => {
-        res.status(200).json({message: "Testing"});
+    app.post("/register", middleware.verifyRegister, (req, res) => {
+        res.status(200).json({message: "User can be registered!"});
         return;
     })
 }
