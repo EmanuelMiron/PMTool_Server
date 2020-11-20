@@ -1,8 +1,10 @@
 const middleware = require("../middlewares/verifyRegister");
+const controller = require("../controllers/auth.controller");
 
 module.exports = app => {
-    app.post("/register", middleware.verifyRegister, (req, res) => {
-        res.status(200).json({message: "User can be registered!"});
-        return;
-    })
+    app.post(
+        "/register",
+        middleware.verifyRegister,
+        controller.register
+    )
 }
