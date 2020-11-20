@@ -24,8 +24,7 @@ exports.register = (req, res) => {
     }
 
     db.collection("users")
-        .doc(username)
-        .set({
+        .add({
             username,
             email,
             password: bcrypt.hashSync(password, 8)
