@@ -3,7 +3,7 @@ const controller = require("../controllers/auth.controller");
 
 module.exports = app => {
     app.post(
-        "/register",
+        "/auth/register",
         middleware.verifyRegister,
         controller.register
     )
