@@ -5,4 +5,4 @@ const app = express();
 
 require('./routes/auth.routes')(app);
 
-exports.api = functions.https.onRequest(app);
+exports.api = functions.region('europe-west1').https.onRequest(app);
