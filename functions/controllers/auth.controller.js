@@ -13,7 +13,8 @@ const db = require("../config/db.config");
 exports.register = (req, res) => {
     // Destructure the request body
     const newUser = {
-        username,
+        firstName,
+        lastName,
         email,
         password,
         confirmPassword
@@ -27,7 +28,8 @@ exports.register = (req, res) => {
 
     db.collection("users")
         .add({
-            username,
+            firstName,
+            lastName,
             email,
             password: bcrypt.hashSync(password, 8)
         })
