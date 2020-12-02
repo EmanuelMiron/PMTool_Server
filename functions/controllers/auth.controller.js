@@ -4,7 +4,6 @@
 // }
 
 const config = require("../config/auth.config");
-const helper = require("../helpers/validators");
 
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
@@ -19,12 +18,6 @@ exports.register = (req, res) => {
         password,
         confirmPassword
     } = req.body;
-
-    const {
-        valid,
-        errors
-    } = helper.validateRegister(newUser);
-    if (!valid) return res.status(400).json(errors);
 
     db.collection("users")
         .add({
@@ -53,12 +46,6 @@ exports.login = (req, res) => {
         email,
         password
     } = req.body;
-
-    const {
-        valid,
-        errors
-    } = helper.validateLogin(user);
-    if (!valid) return res.status(400).json(errors);
 
     // Check if the User exists
     db.collection("users")
