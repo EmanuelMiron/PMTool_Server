@@ -42,7 +42,7 @@ exports.register = (req, res) => {
 
 exports.login = (req, res) => {
     // Destructure request body
-    const user = {
+    const {
         email,
         password
     } = req.body;
