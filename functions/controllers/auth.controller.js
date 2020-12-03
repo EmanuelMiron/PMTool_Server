@@ -77,7 +77,7 @@ exports.login = (req, res) => {
             })
 
             res.status(200).send({
-                email,
+                firstName: doc.data().firstName,
                 accessToken: token
             })
         })
