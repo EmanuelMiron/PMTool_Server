@@ -13,19 +13,23 @@ exports.register = (req, res) => {
     // Destructure the request body
     const newUser = {
         firstName,
-        lastName,
         email,
-        password,
-        confirmPassword
     } = req.body;
 
+    // Add Password to newUser
+
+    newUser.password = bcrypt.hashSync(req.body.password, 8)
+
+    // Add lastName if there is one provided
+    if (req.body.lastName) {
+        newUser.lastName = {
+            lastname
+        } = req.body
+    }
+
+
     db.collection("users")
-        .add({
-            firstName,
-            lastName,
-            email,
-            password: bcrypt.hashSync(password, 8)
-        })
+        .add(newUser)
         .then(() => {
             res.status(200).json({
                 message: "User has been registered successfully!"
