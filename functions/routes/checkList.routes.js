@@ -19,4 +19,10 @@ module.exports = app => {
         middleware.verifyToken,
         controller.getCheckList
     )
+
+    app.get(
+        "/checklists",
+        middleware.verifyToken,
+        controller.getCheckLists
+    )
 }

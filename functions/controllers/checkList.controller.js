@@ -56,6 +56,28 @@ exports.getCheckList = (req, res) => {
         })
 }
 
+exports.getCheckLists = (req, res) => {
+    const userId = req.user.id;
+
+    db
+    .collection('checkLists')
+    .where("userId", "==", userId)
+    .get()
+    .then(querySnapshot => {
+        let data = [];
+        querySnapshot.forEach(doc => {
+            data.push(doc.data())
+        })
+        res.status(200).json(data);
+    })
+    .catch(err => {
+        console.error("Error", err);
+        res.status(500).json({
+            error: err
+        })
+    })
+}
+
 exports.updateCheckList = (req, res) => {
     const checkListId = req.params.id;
     const userId = req.user.id;
