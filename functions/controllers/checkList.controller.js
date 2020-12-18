@@ -30,6 +30,32 @@ exports.createNewCheckList = (req, res) => {
 
 }
 
+exports.getCheckList = (req, res) => {
+    const checkListId = req.params.id;
+    const userId = req.user.id;
+
+    db
+        .collection('checkLists')
+        .doc(checkListId)
+        .get()
+        .then(doc => {
+            if (userId === doc.data().userId) {
+                res.status(200).json(doc.data());
+            } else {
+                return res.status(401).json({
+                    message: 'Unauthorized!'
+                })
+            }
+
+        })
+        .catch(err => {
+            console.error("Error", err);
+            res.status(500).json({
+                error: err
+            })
+        })
+}
+
 exports.updateCheckList = (req, res) => {
     const checkListId = req.params.id;
     const userId = req.user.id;
@@ -62,14 +88,15 @@ exports.updateCheckList = (req, res) => {
                         })
 
                 } else {
-                    console.log("NOpe!");
                     return res.status(401).json({
                         message: 'Unauthorized!'
                     })
                 }
 
             } else {
-                return res.status(404).json({message: "CheckList not found"});
+                return res.status(404).json({
+                    message: "CheckList not found"
+                });
             }
         })
         .catch(err => {
