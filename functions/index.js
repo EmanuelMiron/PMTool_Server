@@ -11,5 +11,6 @@ const corsOptions = {
 app.use( cors());
 
 require('./routes/auth.routes')(app);
+require('./routes/checkList.routes')(app);
 
 exports.api = functions.region('europe-west1').https.onRequest(app);
