@@ -39,12 +39,18 @@ exports.getCheckList = (req, res) => {
         .doc(checkListId)
         .get()
         .then(doc => {
-            if (userId === doc.data().userId) {
-                res.status(200).json(doc.data());
+            if (doc.exists) {
+                if (userId === doc.data().userId) {
+                    res.status(200).json(doc.data());
+                } else {
+                    return res.status(401).json({
+                        message: 'Unauthorized!'
+                    })
+                }
             } else {
-                return res.status(401).json({
-                    message: 'Unauthorized!'
-                })
+                return res.status(404).json({
+                    message: "CheckList not found"
+                });
             }
 
         })
@@ -60,22 +66,22 @@ exports.getCheckLists = (req, res) => {
     const userId = req.user.id;
 
     db
-    .collection('checkLists')
-    .where("userId", "==", userId)
-    .get()
-    .then(querySnapshot => {
-        let data = [];
-        querySnapshot.forEach(doc => {
-            data.push(doc.data())
+        .collection('checkLists')
+        .where("userId", "==", userId)
+        .get()
+        .then(querySnapshot => {
+            let data = [];
+            querySnapshot.forEach(doc => {
+                data.push(doc.data())
+            })
+            res.status(200).json(data);
         })
-        res.status(200).json(data);
-    })
-    .catch(err => {
-        console.error("Error", err);
-        res.status(500).json({
-            error: err
+        .catch(err => {
+            console.error("Error", err);
+            res.status(500).json({
+                error: err
+            })
         })
-    })
 }
 
 exports.updateCheckList = (req, res) => {
@@ -100,6 +106,53 @@ exports.updateCheckList = (req, res) => {
                         .then(() => {
                             res.status(200).json({
                                 message: "CheckList updated sucessfully!"
+                            })
+                        })
+                        .catch(err => {
+                            console.error("Error", err);
+                            res.status(500).json({
+                                error: err
+                            })
+                        })
+
+                } else {
+                    return res.status(401).json({
+                        message: 'Unauthorized!'
+                    })
+                }
+
+            } else {
+                return res.status(404).json({
+                    message: "CheckList not found"
+                });
+            }
+        })
+        .catch(err => {
+            console.error("Error", err);
+            res.status(500).json({
+                error: err
+            })
+        })
+}
+
+exports.deleteCheckList = (req, res) => {
+    const checkListId = req.params.id;
+    const userId = req.user.id;
+
+    const checkListRef = db.collection("checkLists").doc(checkListId)
+
+
+    checkListRef
+        .get()
+        .then(doc => {
+            if (doc.exists) {
+                if (userId === doc.data().userId) {
+
+                    checkListRef
+                        .delete()
+                        .then(() => {
+                            res.status(200).json({
+                                message: "CheckList deleted successfully"
                             })
                         })
                         .catch(err => {

@@ -25,4 +25,10 @@ module.exports = app => {
         middleware.verifyToken,
         controller.getCheckLists
     )
+    
+    app.delete(
+        "/checklist/:id",
+        middleware.verifyToken,
+        controller.deleteCheckList
+    )
 }
