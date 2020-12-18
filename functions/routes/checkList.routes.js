@@ -7,4 +7,10 @@ module.exports = app => {
         middleware.verifyToken,
         controller.createNewCheckList
     )
+
+    app.put(
+        "/checklist/:id",
+        middleware.verifyToken,
+        controller.updateCheckList
+    )
 }

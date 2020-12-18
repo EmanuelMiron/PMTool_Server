@@ -8,7 +8,7 @@ const corsOptions = {
     origin: "http://localhost:3000"
 }
 
-app.use( cors());
+app.use( cors(corsOptions));
 
 require('./routes/auth.routes')(app);
 require('./routes/checkList.routes')(app);
